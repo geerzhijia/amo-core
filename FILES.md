@@ -1,18 +1,62 @@
-# Foundation file inventory
+# Repository file inventory
 
-These are the 43 version-controlled foundation files. Generated virtual
-environments and caches are local development artifacts, not deliverables.
-No empty placeholder files or operational agents are included.
+The initial foundation has 43 files. The hybrid architecture update creates 23
+and modifies 13, for 66 deliverable files in total. The lists below are exhaustive
+and non-overlapping. Local virtual environments/caches are not deliverables.
+No empty placeholders or operational agents are included.
+
+## Created in the hybrid architecture update (23)
 
 ```text
-.gitattributes
-.gitignore
-.github/workflows/validate.yml
+architecture/overview.md
+architecture/control-plane.md
+architecture/execution-plane.md
+architecture/hybrid-runtime.md
+architecture/leadership-lease.md
+architecture/task-lifecycle.md
+architecture/data-consistency.md
+architecture/model-gateway.md
+architecture/security-boundaries.md
+architecture/failure-recovery.md
+architecture/decisions/ADR-0001-single-logical-ceo.md
+governance/node_permissions.yaml
+governance/runtime_permissions.yaml
+schemas/agent.schema.json
+schemas/node.schema.json
+schemas/task.schema.json
+schemas/leadership_lease.schema.json
+migrations/ceo_handover_protocol.md
+migrations/runtime_migration_protocol.md
+evaluation/continuity_tests/hybrid_runtime_scenarios.md
+evaluation/test_runtime_schemas.py
+decisions/records/DEC-0003.json
+audit/events/EVT-0002.json
+```
+
+## Modified in the hybrid architecture update (13)
+
+```text
 README.md
 AMO_IDENTITY.md
 CHANGELOG.md
 FILES.md
 requirements-dev.txt
+agents/ceo/identity.md
+governance/INTEGRITY.md
+operations/state.json
+migrations/README.md
+migrations/CEO_HANDOVER_TEMPLATE.md
+tools/validate.py
+evaluation/test_continuity.py
+integrity/manifest.json
+```
+
+## Preserved unchanged (30)
+
+```text
+.gitattributes
+.gitignore
+.github/workflows/validate.yml
 constitution/constitution_v0.1.md
 principles/README.md
 principles/G-001-principle-amendment-authority.md
@@ -24,7 +68,6 @@ governance/approval_policy.yaml
 governance/agent_permissions.yaml
 governance/approval_schema.json
 governance/REVIEW.md
-governance/INTEGRITY.md
 decisions/README.md
 decisions/schema.json
 decisions/records/DEC-0001.json
@@ -35,21 +78,16 @@ history/principle_evolution/G-001-v1.0.0.md
 history/principle_evolution/G-001-v1.0.0.json
 knowledge/README.md
 agents/README.md
-agents/ceo/identity.md
-operations/state.json
 audit/README.md
 audit/schema.json
 audit/events/EVT-0001.json
-migrations/README.md
-migrations/CEO_HANDOVER_TEMPLATE.md
-integrity/manifest.json
-tools/validate.py
 evaluation/support.py
 evaluation/test_governance.py
-evaluation/test_continuity.py
 evaluation/test_migration.py
 ```
 
-The README explains directory deferrals and the architecture tradeoff recorded
-as proposed DEC-0002. `integrity/manifest.json` inventories file digests, excluding
-itself; it is a consistency baseline, not a signed approval.
+The architecture overview distinguishes confirmed selection, specification,
+implemented offline tooling, tested shapes, and deferred runtime mechanisms.
+The inventory manifest records digests, excluding itself; it is not signed
+approval or immutable storage. DEC-0002 and initial governance records are
+preserved; DEC-0003/ADR-0001 record the later scoped architectural outcome.

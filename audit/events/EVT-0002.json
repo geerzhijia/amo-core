@@ -1,0 +1,11 @@
+{
+  "id": "EVT-0002",
+  "recorded_at": "2026-11-02T03:48:33.325Z",
+  "event_type": "governance_change",
+  "actor": "foundation-initializer",
+  "details": "Recorded founder-confirmed architecture ADR-0001 and specified a hybrid runtime. This event records architecture history, not a principle amendment or deployed governance change. G-001 is unchanged; constitution and permission policies remain proposed. No runtime, node registration, approval enrollment or infrastructure was activated. Timestamp is the supplied architecture-update request time.",
+  "authorization_basis": "Explicit founder architecture update selecting Architecture A, accepted on actual local date 2026-11-01; no additional founder approvals inferred.",
+  "references": ["architecture/decisions/ADR-0001-single-logical-ceo.md", "decisions/records/DEC-0003.json", "architecture/overview.md"],
+  "previous_event": "audit/events/EVT-0001.json",
+  "previous_sha256": "6a39fe9d17dd94a19508fc17674197d007f4f82b545d1b036f75acbd79242baf"
+}

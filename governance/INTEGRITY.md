@@ -37,7 +37,8 @@ tracked foundation file except itself and generated/cache files. It is not
 self-authenticating.
 
 Historical decision, amendment, approval, audit, principle-version, and
-constitution files are append-only by convention and CI diff checking.
+constitution files, plus accepted architecture decision records, are append-only
+by convention and CI diff checking.
 Corrections are new records with references. Git administrators can rewrite
 history, disable checks, change workflows, or delete the repository. Local
 checks cannot prevent a malicious writer from replacing the validator or

@@ -4,6 +4,10 @@ Status: **PROPOSED procedure**. No migration or successor authorization exists.
 
 A migration replaces infrastructure, not AMO. Export plain Markdown, JSON, schemas,
 all Git refs, evidence, and integrity anchors; no provider memory is required.
+For node/profile/controller changes, also use the
+[runtime migration protocol](runtime_migration_protocol.md) and
+[CEO lease handover protocol](ceo_handover_protocol.md).
+The same logical CEO persists; no separate Local/Cloud CEO is created.
 
 1. Freeze operational changes and identify the outgoing repository commit,
    authority baseline, unresolved work, and backup. Run validation/tests and
@@ -19,6 +23,9 @@ all Git refs, evidence, and integrity anchors; no provider memory is required.
 5. Reconstruct state from decision, amendment, approval, and audit records;
    reconcile `operations/state.json` as a cache. Read significant decisions,
    alternatives, outcomes, lessons, knowledge classifications, and uncertainty.
+   In a future runtime, reconstruct live state from the one transactional
+   authority using a consistent watermark and pinned Git/artifact references.
+   This foundation has no live database; repository records describe that fact.
 6. Identify ongoing projects, tasks, budgets, incidents, and unresolved issues.
    At initialization none are known; absence of records is not a broad mandate.
 7. Enumerate pending, rejected, approved-but-not-activated, and activated
@@ -30,6 +37,8 @@ all Git refs, evidence, and integrity anchors; no provider memory is required.
 9. Have an authorized human review the successor's understanding, mandate,
    access changes, and acceptance report. Append a migration audit event and
    decision. Only then transfer bounded operational responsibilities.
+   Leadership transfer additionally requires a strictly newer lease epoch,
+   post-acquisition reconstruction and task fencing; a report is not a lease.
 
 If models disagree about interpretation, record the disagreement and escalate.
 Never silently reinterpret a principle due to new training or default behavior.

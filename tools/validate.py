@@ -21,6 +21,7 @@ HISTORICAL = (
     "audit/events/",
     "history/",
     "constitution/",
+    "architecture/decisions/",
 )
 EXCLUDED_PARTS = {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache"}
 MANIFEST = "integrity/manifest.json"
@@ -63,8 +64,8 @@ def read(root, reference):
 
 
 def check_schema(root, reference, value):
-    require("date-time" in FormatChecker.checkers,
-            "RFC 3339 format checker missing; install requirements-dev.txt")
+    require({"date-time", "uri"} <= FormatChecker.checkers.keys(),
+            "Required timestamp/URI format checker missing; install requirements-dev.txt")
     schema = read(root, reference)
     Draft202012Validator.check_schema(schema)
     Draft202012Validator(schema, format_checker=FormatChecker()).validate(value)
@@ -320,7 +321,7 @@ def validate_history(root, base):
         base = roots[0]
     require(re.fullmatch(r"[a-fA-F0-9]{7,40}", base) is not None, "Invalid history base SHA")
     changes = subprocess.check_output(
-        ["git", "--no-pager", "diff", "--name-status", "--no-renames", base, "HEAD", "--", *HISTORICAL],
+        ["git", "--no-pager", "diff", "--name-status", "--no-renames", base, "--", *HISTORICAL],
         cwd=root, text=True,
     )
     for line in changes.splitlines():
@@ -339,6 +340,49 @@ def validate_markdown_links(root):
             resolved = (path.parent / target.split("#", 1)[0]).resolve()
             require(resolved.is_relative_to(root.resolve()) and resolved.is_file(),
                     f"Broken local Markdown link in {path.relative_to(root)}: {target}")
+
+
+def validate_runtime_specs(root, state):
+    for kind in ("agent", "node", "task", "leadership_lease"):
+        reference = f"schemas/{kind}.schema.json"
+        schema = read(root, reference)
+        require(bool(schema.get("examples")), f"Missing synthetic schema example: {reference}")
+        for example in schema["examples"]:
+            check_schema(root, reference, example)
+    nodes = read(root, "governance/node_permissions.yaml")
+    runtime = read(root, "governance/runtime_permissions.yaml")
+    for policy in (nodes, runtime):
+        require(policy["status"] == "PROPOSED" and policy["default"] == "deny",
+                "Runtime permission specifications are not deployed policy grants")
+        require(policy["runtime_enabled"] is False, "Runtime execution is not enabled")
+        require(policy["confirmed_constraint"] == "G-001", "Runtime must preserve G-001")
+    require(not nodes["registered_nodes"] and not runtime["current_grants"],
+            "Specification-only update cannot register nodes or grant runtime permissions")
+    require(nodes["direct_authoritative_writes"] is False
+            and nodes["governance_approval"] is False
+            and nodes["personal_credential_access"] is False,
+            "Execution nodes cannot gain direct authority or personal credentials")
+    require(runtime["maximum_logical_ceos"] == runtime["maximum_active_controllers"] == 1
+            and runtime["logical_ceo_agent_id"] == "amo-ceo",
+            "AMO must retain one logical CEO and at most one active controller")
+    require(runtime["leadership_fencing_required"] is True
+            and runtime["task_fencing_required"] is True
+            and runtime["runtime_governance_self_approval"] is False
+            and runtime["autonomous_financial_transactions"] is False
+            and runtime["credential_inheritance_between_nodes"] is False,
+            "Runtime specification cannot bypass fencing, approval or credential boundaries")
+    architecture = state["architecture"]
+    reference = architecture["path"]
+    require(architecture["decision_id"] == "ADR-0001"
+            and architecture["status"] == "CONFIRMED_BY_FOUNDER"
+            and architecture["logical_ceo_agent_id"] == runtime["logical_ceo_agent_id"],
+            "State summary must preserve founder-confirmed Architecture A")
+    require(nodes["architecture_ref"] == runtime["architecture_ref"] == reference,
+            "Runtime policies disagree about the authoritative ADR")
+    text = local_path(root, reference).read_text(encoding="utf-8")
+    require("Status: CONFIRMED_BY_FOUNDER" in text
+            and f"Accepted: {architecture['accepted_on']}" in text,
+            "ADR status/date differs from state summary")
 
 
 def validate(root, *, check_manifest=True):
@@ -363,6 +407,7 @@ def validate(root, *, check_manifest=True):
     require(state["runtime_enabled"] is False, "This foundation does not enable a runtime")
     require(read(root, "governance/agent_permissions.yaml")["runtime_enabled"] is False,
             "This foundation does not grant runtime permissions")
+    validate_runtime_specs(root, state)
     validate_markdown_links(root)
     if check_manifest:
         validate_manifest(root)

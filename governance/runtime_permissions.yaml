@@ -1,0 +1,27 @@
+{
+  "status": "PROPOSED",
+  "version": "0.1",
+  "architecture_ref": "architecture/decisions/ADR-0001-single-logical-ceo.md",
+  "confirmed_constraint": "G-001",
+  "runtime_enabled": false,
+  "default": "deny",
+  "logical_ceo_agent_id": "amo-ceo",
+  "maximum_logical_ceos": 1,
+  "maximum_active_controllers": 1,
+  "deployment_profiles": ["LOCAL_ONLY", "CLOUD_ONLY", "HYBRID"],
+  "leadership_fencing_required": true,
+  "task_fencing_required": true,
+  "current_grants": [],
+  "prospective_roles": {
+    "ceo_controller": ["Use fenced state APIs within an approved mandate", "Schedule and review scoped tasks", "Manage registries and budgets only within explicit authority"],
+    "subagent": ["Read assigned inputs", "Use specifically granted tools", "Stage results and submit reports"],
+    "local_execution_node": ["Host authorized isolated workloads within a node permission ceiling"],
+    "cloud_execution_node": ["Host authorized isolated workloads with separately authorized cloud credentials"],
+    "human_administrator": ["Provision, revoke, and recover within a verified administration mandate"],
+    "human_approval_authority": ["Approve or reject exact content within independently verified enrollment scope"]
+  },
+  "runtime_governance_self_approval": false,
+  "autonomous_financial_transactions": false,
+  "credential_inheritance_between_nodes": false,
+  "note": "Descriptive specification only. No human enrollment or deployed enforcement is created. All authoritative writes require current fencing and separately applicable authorization."
+}

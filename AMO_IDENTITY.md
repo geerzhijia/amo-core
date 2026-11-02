@@ -11,7 +11,10 @@ Recorded: 2026-11-01. Stable repository organization key: `amo`.
 - Foundation objective: preserve organizational identity and traceable governance
   across replacement of all models, infrastructure, and software.
 - Initial amendment rule: G-001, requiring explicitly authorized human approval.
-- Stage: foundation initialization; no operational CEO or subagents are running.
+- Architecture: one continuous logical CEO (`amo-ceo`), one governance system and
+  organizational state, with multiple execution nodes. Local and Cloud are
+  environments, not separate CEO/organization identities.
+- Stage: hybrid-runtime specification; no operational CEO or subagents are running.
 
 The foundation objective is not an invented ultimate organizational mission.
 Ultimate mission, fundamental values beyond the confirmed constraints, legal
@@ -27,3 +30,5 @@ must preserve the meaning and authority of approved records; disagreement is a
 reason to propose an amendment, not silently reinterpret the organization.
 
 Source: [founder brief](governance/founder_brief.md), recorded in DEC-0001.
+Architecture source: [ADR-0001](architecture/decisions/ADR-0001-single-logical-ceo.md),
+CONFIRMED_BY_FOUNDER on 2026-11-01. It does not approve other draft documents.

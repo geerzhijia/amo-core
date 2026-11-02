@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:amo:schema:leadership-lease:0.1",
+  "title": "AMO singleton CEO leadership lease snapshot",
+  "description": "Shape only. Exclusivity, monotonicity, expiration, and transactional fencing require a future database implementation.",
+  "type": "object", "additionalProperties": false,
+  "required": ["organization_id", "lease_key", "lease_version", "leadership_epoch", "state", "holder", "acquired_at", "last_renewed_at", "expires_at", "last_handover_event_ref", "reconstruction_watermark"],
+  "properties": {
+    "organization_id": {"const": "amo"},
+    "lease_key": {"const": "ceo-leadership"},
+    "lease_version": {"type": "integer", "minimum": 1},
+    "leadership_epoch": {"type": "integer", "minimum": 0},
+    "state": {"enum": ["UNHELD", "RECONSTRUCTING", "ACTIVE"]},
+    "holder": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["agent_id", "controller_instance_id", "node_id"],
+          "properties": {
+            "agent_id": {"const": "amo-ceo"},
+            "controller_instance_id": {"type": "string", "pattern": "^run-[a-zA-Z0-9-]+$"},
+            "node_id": {"type": "string", "pattern": "^amo-node-[a-z0-9][a-z0-9-]*$"}
+          }
+        }
+      ]
+    },
+    "acquired_at": {"type": ["string", "null"], "format": "date-time"},
+    "last_renewed_at": {"type": ["string", "null"], "format": "date-time"},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"},
+    "last_handover_event_ref": {"type": ["string", "null"], "format": "uri"},
+    "reconstruction_watermark": {"type": ["string", "null"], "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state": {"const": "UNHELD"}}},
+      "then": {"properties": {"holder": {"type": "null"}, "acquired_at": {"type": "null"}, "last_renewed_at": {"type": "null"}, "expires_at": {"type": "null"}, "reconstruction_watermark": {"type": "null"}}},
+      "else": {"properties": {"holder": {"type": "object"}, "leadership_epoch": {"minimum": 1}, "acquired_at": {"type": "string"}, "last_renewed_at": {"type": "string"}, "expires_at": {"type": "string"}, "last_handover_event_ref": {"type": "string"}}}
+    },
+    {"if": {"properties": {"state": {"const": "ACTIVE"}}}, "then": {"properties": {"reconstruction_watermark": {"type": "string", "minLength": 1}}}}
+  ],
+  "examples": [{
+    "organization_id": "amo", "lease_key": "ceo-leadership", "lease_version": 1,
+    "leadership_epoch": 0, "state": "UNHELD", "holder": null,
+    "acquired_at": null, "last_renewed_at": null, "expires_at": null,
+    "last_handover_event_ref": null, "reconstruction_watermark": null
+  }]
+}

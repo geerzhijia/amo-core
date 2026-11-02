@@ -11,6 +11,7 @@ entity declaration, or authorization to transact.
 | Item | Status |
 | --- | --- |
 | Name, model independence, repository authority, G-001 | CONFIRMED by the founder's initialization instructions |
+| Architecture A: one logical CEO, multiple execution nodes | CONFIRMED_BY_FOUNDER in ADR-0001, accepted 2026-11-01 |
 | Constitution v0.1 and supporting governance policy | PROPOSED; not formally approved |
 | Ultimate mission, legal structure, revenue, compensation, external scope | UNDECIDED |
 | Authorized human account enrollment | UNDECIDED; no account is implicitly enrolled |
@@ -33,13 +34,21 @@ See [the full file inventory](FILES.md) for all foundation deliverables.
    [audit](audit/README.md), and [CEO role](agents/ceo/identity.md).
 5. [Migration protocol](migrations/README.md) and
    [handover template](migrations/CEO_HANDOVER_TEMPLATE.md).
+6. [Hybrid architecture overview](architecture/overview.md),
+   [ADR-0001](architecture/decisions/ADR-0001-single-logical-ceo.md), and
+   [CEO handover protocol](migrations/ceo_handover_protocol.md).
 
 ## Architecture
 
 Markdown carries human-readable meaning; JSON records and JSON Schema carry
 structured evidence and lifecycle state. Governance `.yaml` files deliberately
 use JSON syntax, a valid YAML 1.2 subset, to avoid a YAML parser dependency.
-There is no required database, AI provider, orchestration framework, or cloud.
+There is no deployed database, AI provider, orchestration framework, or cloud.
+The confirmed hybrid architecture specifies one logical CEO (`amo-ceo`) and
+multiple execution nodes. Future live state requires a transactional database,
+not Git synchronization. Git remains authoritative for identity/governance
+versions; a future database coordinates leases, tasks and live status, while
+knowledge storage holds referenced artifacts. No database engine is selected.
 Historical records are new files, not edits to old records. Git is useful history,
 but is neither immutable nor tamper-proof.
 
@@ -77,13 +86,16 @@ Empty project/task/budget, research/reference, milestone, and lessons directorie
 are omitted until real records exist. `operations/state.json` explicitly records
 that there are no known projects or pending amendments and lists unresolved
 questions. History directories exist only where an actual record is present.
-The evaluation tests are consolidated into three files rather than empty suite
-directories. No license is selected: licensing is UNDECIDED, and public visibility
+Executable evaluation is kept in focused test files; the hybrid scenario
+document specifies future distributed conformance tests, not passing runtime
+tests. No license is selected: licensing is UNDECIDED, and public visibility
 does not grant a general reuse license.
 
 ## Proposed next phase
 
-Founder review, verified human enrollment, approval of a constitution and policy
-baseline, and a dry-run amendment/handover using explicitly non-authoritative
-fixtures. Only then specify bounded, read-only CEO planning and future agent
-interfaces. Runtime, external operations, and delegation require separate approval.
+Review the detailed specifications, enroll verified human approvers, and approve
+a constitution/policy baseline. Next build an isolated, non-production persistence
+adapter conformance harness for lease fencing, task ownership, crash/partition and
+restore scenarios, using synthetic data and fake effect/model adapters.
+No autonomous CEO is needed for that harness. Runtime deployment, external
+operations, and delegation require separate approval.

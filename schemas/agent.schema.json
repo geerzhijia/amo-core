@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:amo:schema:agent:0.1",
+  "title": "Permanent AMO agent identity and configuration references",
+  "description": "Specified future registry record. Examples are synthetic, not live registrations or grants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent_id", "organization_id", "role_type", "role_ref", "configuration_id", "configuration_version", "configuration_ref", "permission_policy_ref", "registry_version", "status", "created_at", "updated_at", "task_history_ref"],
+  "properties": {
+    "agent_id": {"type": "string", "pattern": "^amo-[a-z0-9][a-z0-9-]*$"},
+    "organization_id": {"const": "amo"},
+    "role_type": {"enum": ["CEO", "SUBAGENT"]},
+    "role_ref": {"$ref": "#/$defs/git_ref"},
+    "configuration_id": {"type": "string", "minLength": 1},
+    "configuration_version": {"type": "integer", "minimum": 1},
+    "configuration_ref": {"type": "string", "format": "uri"},
+    "permission_policy_ref": {"$ref": "#/$defs/git_ref"},
+    "registry_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["REGISTERED", "SUSPENDED", "RETIRED"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "task_history_ref": {"type": "string", "format": "uri"}
+  },
+  "$defs": {
+    "git_ref": {
+      "type": "object", "additionalProperties": false, "required": ["path", "commit", "sha256"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^[A-Za-z0-9_-]+(?:/[A-Za-z0-9_.-]+)+$"},
+        "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"role_type": {"const": "CEO"}}}, "then": {"properties": {"agent_id": {"const": "amo-ceo"}}}, "else": {"properties": {"agent_id": {"not": {"const": "amo-ceo"}}}}}
+  ],
+  "examples": [{
+    "agent_id": "amo-ceo", "organization_id": "amo", "role_type": "CEO",
+    "role_ref": {"path": "agents/ceo/identity.md", "commit": "0000000000000000000000000000000000000000", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+    "configuration_id": "synthetic-config-001", "configuration_version": 1,
+    "configuration_ref": "urn:amo:fixture:configuration:001",
+    "permission_policy_ref": {"path": "governance/runtime_permissions.yaml", "commit": "0000000000000000000000000000000000000000", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+    "registry_version": 1, "status": "SUSPENDED",
+    "created_at": "2026-11-01T19:48:33-08:00", "updated_at": "2026-11-01T19:48:33-08:00",
+    "task_history_ref": "urn:amo:fixture:agent-history:001"
+  }]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:amo:schema:node:0.1",
+  "title": "AMO execution node registry snapshot",
+  "description": "Capabilities are observations, not permission grants. Examples are synthetic.",
+  "type": "object", "additionalProperties": false,
+  "required": ["node_id", "organization_id", "node_type", "registry_version", "authorization_status", "available_models", "available_tools", "runtime_capabilities", "resource_limits", "security_permissions", "availability", "execution_status", "last_seen_at", "credential_profile_refs"],
+  "properties": {
+    "node_id": {"type": "string", "pattern": "^amo-node-[a-z0-9][a-z0-9-]*$"},
+    "organization_id": {"const": "amo"},
+    "node_type": {"enum": ["LOCAL", "CLOUD", "REMOTE_SERVER", "EDGE_DEVICE", "DEDICATED_COMPUTE_NODE"]},
+    "registry_version": {"type": "integer", "minimum": 1},
+    "authorization_status": {"enum": ["PENDING", "AUTHORIZED", "SUSPENDED", "REVOKED"]},
+    "available_models": {
+      "type": "array", "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["provider_key", "model_id", "gateway_route"],
+        "properties": {
+          "provider_key": {"type": "string", "minLength": 1},
+          "model_id": {"type": "string", "minLength": 1},
+          "gateway_route": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "available_tools": {"$ref": "#/$defs/names"},
+    "runtime_capabilities": {"$ref": "#/$defs/names"},
+    "resource_limits": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cpu_cores", "memory_mb", "disk_mb", "max_concurrent_tasks"],
+      "properties": {
+        "cpu_cores": {"type": "number", "exclusiveMinimum": 0},
+        "memory_mb": {"type": "integer", "minimum": 1},
+        "disk_mb": {"type": "integer", "minimum": 0},
+        "max_concurrent_tasks": {"type": "integer", "minimum": 1}
+      }
+    },
+    "security_permissions": {"$ref": "#/$defs/names"},
+    "availability": {"enum": ["AVAILABLE", "DEGRADED", "UNAVAILABLE", "OFFLINE"]},
+    "execution_status": {"enum": ["IDLE", "BUSY", "DRAINING", "STOPPED"]},
+    "last_seen_at": {"type": "string", "format": "date-time"},
+    "credential_profile_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "format": "uri"}}
+  },
+  "$defs": {"names": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}},
+  "examples": [{
+    "node_id": "amo-node-fixture-local", "organization_id": "amo", "node_type": "LOCAL",
+    "registry_version": 1, "authorization_status": "PENDING",
+    "available_models": [{"provider_key": "synthetic-provider", "model_id": "synthetic-model", "gateway_route": "fixture-route"}],
+    "available_tools": [], "runtime_capabilities": ["checkpoint-v1"],
+    "resource_limits": {"cpu_cores": 1, "memory_mb": 512, "disk_mb": 1024, "max_concurrent_tasks": 1},
+    "security_permissions": [], "availability": "OFFLINE", "execution_status": "STOPPED",
+    "last_seen_at": "2026-11-01T19:48:33-08:00", "credential_profile_refs": []
+  }]
+}

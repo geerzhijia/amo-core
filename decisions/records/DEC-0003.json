@@ -1,0 +1,17 @@
+{
+  "id": "DEC-0003",
+  "date": "2026-11-01",
+  "record_type": "outcome_update",
+  "owner": {"id": "foundation-initializer", "actor_type": "ai"},
+  "statement": "Record the founder's selection of Architecture A as ADR-0001 without approving unrelated draft policies or deploying a runtime.",
+  "context": "Follow-up to DEC-0002's architecture recommendation. The founder explicitly selected one logical CEO with multiple execution nodes. DEC-0002 remains historical; this outcome does not approve it in its entirety.",
+  "evidence": ["architecture/decisions/ADR-0001-single-logical-ceo.md", "architecture/overview.md"],
+  "alternatives": ["Independent Local and Cloud CEO identities: not the architecture selected by the founder.", "Git synchronization for live coordination: excluded by the architecture requirements."],
+  "risks": ["Single-authority consistency makes write availability conditional on the transactional store.", "Schema checks cannot prove distributed fencing or authenticate consent."],
+  "assumptions": ["No runtime, database engine, hosting provider or operational mandate has been selected or activated."],
+  "expected_outcome": "A portable hybrid-runtime specification that preserves AMO identity and unchanged G-001.",
+  "authorization": {"status": "recorded", "basis": "Scoped explicit founder selection transcribed in ADR-0001; this outcome record itself grants no authority.", "approval_ref": null},
+  "actual_outcome": "Founder confirmed Architecture A: one shared logical CEO with multiple execution nodes. Mechanisms are specified, not deployed.",
+  "lessons_learned": ["Architectural acceptance must be distinguished from policy approval and operational activation."],
+  "supersedes": "decisions/records/DEC-0002.json"
+}

@@ -1,9 +1,17 @@
 {
   "organization": "amo",
   "as_of": "2026-11-01",
-  "stage": "foundation_initialization",
+  "stage": "hybrid_runtime_specification",
   "status": "PROPOSED navigation summary; not an authority grant",
   "constitution": {"path": "constitution/constitution_v0.1.md", "status": "PROPOSED"},
+  "architecture": {
+    "decision_id": "ADR-0001",
+    "path": "architecture/decisions/ADR-0001-single-logical-ceo.md",
+    "status": "CONFIRMED_BY_FOUNDER",
+    "accepted_on": "2026-11-01",
+    "logical_ceo_agent_id": "amo-ceo",
+    "live_runtime_state": "DEFERRED: no transactional database or runtime exists"
+  },
   "active_principles": ["G-001@1.0.0"],
   "known_projects": [],
   "known_tasks": [],
@@ -15,7 +23,9 @@
     "UNDECIDED: legal structure, revenue model, compensation, external operating scope",
     "UNDECIDED: authenticated human approvers and approved governance policy baseline",
     "UNDECIDED: license and approved conflict-priority ranking",
-    "PROPOSED: constitution v0.1 and architecture DEC-0002 awaiting founder review",
+    "PROPOSED: constitution v0.1 and detailed policies remain unapproved; DEC-0002 is retained as a historical recommendation, with scoped architecture outcome in DEC-0003/ADR-0001",
+    "UNDECIDED: database backend/topology, lease clock semantics, epoch recovery anchor, providers, secret store, operational budgets and runtime mandate",
+    "DEFERRED: live lease/task fencing, gateway, scheduler, node registration and distributed conformance tests",
     "DEFERRED: deployed access controls, signed approvals, backup custodian and restore test"
   ]
 }

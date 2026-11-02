@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:amo:schema:task:0.1",
+  "title": "AMO persistent task snapshot",
+  "description": "Shape only. Lifecycle transitions, current fences, approvals, ownership and permission truth require transactional validation. Example is synthetic.",
+  "type": "object", "additionalProperties": false,
+  "required": ["task_id", "organization_id", "parent_task_id", "assigned_agent_id", "assigned_node_id", "runtime_instance_id", "task_version", "execution_epoch", "leadership_epoch", "status", "created_at", "updated_at", "deadline_at", "task_lease_expires_at", "retry_policy", "attempt", "required_capabilities", "permission_requirements", "expected_outputs", "result_ref", "approval_ref", "human_approval_required", "idempotency", "resume_policy", "last_verified_checkpoint", "outstanding_operations"],
+  "properties": {
+    "task_id": {"type": "string", "pattern": "^task-[a-zA-Z0-9-]+$"},
+    "organization_id": {"const": "amo"},
+    "parent_task_id": {"type": ["string", "null"], "pattern": "^task-[a-zA-Z0-9-]+$"},
+    "assigned_agent_id": {"type": ["string", "null"], "pattern": "^amo-[a-z0-9][a-z0-9-]*$"},
+    "assigned_node_id": {"type": ["string", "null"], "pattern": "^amo-node-[a-z0-9][a-z0-9-]*$"},
+    "runtime_instance_id": {"type": ["string", "null"], "pattern": "^run-[a-zA-Z0-9-]+$"},
+    "task_version": {"type": "integer", "minimum": 1},
+    "execution_epoch": {"type": "integer", "minimum": 0},
+    "leadership_epoch": {"type": ["integer", "null"], "minimum": 1},
+    "status": {"enum": ["PROPOSED", "APPROVED", "QUEUED", "ASSIGNED", "RUNNING", "COMPLETED", "BLOCKED", "FAILED", "CANCELLED", "EXPIRED", "AWAITING_HUMAN_APPROVAL", "RETRY_PENDING"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "deadline_at": {"type": ["string", "null"], "format": "date-time"},
+    "task_lease_expires_at": {"type": ["string", "null"], "format": "date-time"},
+    "retry_policy": {
+      "type": "object", "additionalProperties": false, "required": ["max_attempts", "backoff_seconds", "retryable_failure_codes"],
+      "properties": {
+        "max_attempts": {"type": "integer", "minimum": 1},
+        "backoff_seconds": {"type": "number", "minimum": 0},
+        "retryable_failure_codes": {"$ref": "#/$defs/names"}
+      }
+    },
+    "attempt": {"type": "integer", "minimum": 0},
+    "required_capabilities": {"$ref": "#/$defs/names"},
+    "permission_requirements": {"$ref": "#/$defs/names"},
+    "expected_outputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "result_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifact"}]},
+    "approval_ref": {"type": ["string", "null"], "format": "uri"},
+    "human_approval_required": {"type": "boolean"},
+    "idempotency": {
+      "type": "object", "additionalProperties": false, "required": ["classification", "key"],
+      "properties": {
+        "classification": {"enum": ["PURE", "IDEMPOTENT", "EXTERNAL_EFFECT", "NON_IDEMPOTENT", "UNKNOWN"]},
+        "key": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
+    "resume_policy": {"enum": ["CHECKPOINT_RESTART", "RESTART_SAFE", "HUMAN_RECONCILIATION_REQUIRED"]},
+    "last_verified_checkpoint": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifact"}]},
+    "outstanding_operations": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["operation_id", "idempotency_key", "status", "evidence_ref"],
+        "properties": {
+          "operation_id": {"type": "string", "minLength": 1},
+          "idempotency_key": {"type": ["string", "null"], "minLength": 1},
+          "status": {"enum": ["INTENT", "IN_FLIGHT", "CONFIRMED", "UNCERTAIN"]},
+          "evidence_ref": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifact"}]}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "names": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "artifact": {
+      "type": "object", "additionalProperties": false, "required": ["uri", "sha256", "media_type"],
+      "properties": {
+        "uri": {"type": "string", "format": "uri"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"enum": ["ASSIGNED", "RUNNING"]}}},
+      "then": {"properties": {"assigned_agent_id": {"type": "string"}, "assigned_node_id": {"type": "string"}, "runtime_instance_id": {"type": "string"}, "task_lease_expires_at": {"type": "string"}, "execution_epoch": {"minimum": 1}, "leadership_epoch": {"type": "integer"}, "attempt": {"minimum": 1}}},
+      "else": {"properties": {"task_lease_expires_at": {"type": "null"}}}
+    },
+    {"if": {"properties": {"status": {"enum": ["PROPOSED", "APPROVED", "QUEUED", "AWAITING_HUMAN_APPROVAL", "BLOCKED", "RETRY_PENDING"]}}}, "then": {"properties": {"assigned_agent_id": {"type": "null"}, "assigned_node_id": {"type": "null"}, "runtime_instance_id": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"enum": ["APPROVED", "QUEUED", "ASSIGNED", "RUNNING", "COMPLETED", "RETRY_PENDING"]}}}, "then": {"properties": {"approval_ref": {"type": "string"}}}},
+    {"if": {"properties": {"status": {"const": "COMPLETED"}}}, "then": {"properties": {"result_ref": {"type": "object"}}}, "else": {"properties": {"result_ref": {"type": "null"}}}},
+    {"if": {"properties": {"idempotency": {"properties": {"classification": {"enum": ["IDEMPOTENT", "EXTERNAL_EFFECT"]}}}}}, "then": {"properties": {"idempotency": {"properties": {"key": {"type": "string"}}}}}},
+    {"if": {"properties": {"idempotency": {"properties": {"classification": {"enum": ["UNKNOWN", "NON_IDEMPOTENT"]}}}}}, "then": {"properties": {"retry_policy": {"properties": {"max_attempts": {"const": 1}}}, "resume_policy": {"const": "HUMAN_RECONCILIATION_REQUIRED"}}}}
+  ],
+  "examples": [{
+    "task_id": "task-fixture-001", "organization_id": "amo", "parent_task_id": null,
+    "assigned_agent_id": null, "assigned_node_id": null, "runtime_instance_id": null,
+    "task_version": 1, "execution_epoch": 0, "leadership_epoch": null, "status": "PROPOSED",
+    "created_at": "2026-11-01T19:48:33-08:00", "updated_at": "2026-11-01T19:48:33-08:00",
+    "deadline_at": null, "task_lease_expires_at": null,
+    "retry_policy": {"max_attempts": 1, "backoff_seconds": 0, "retryable_failure_codes": []},
+    "attempt": 0, "required_capabilities": [], "permission_requirements": [],
+    "expected_outputs": ["Synthetic fixture report"], "result_ref": null,
+    "approval_ref": null, "human_approval_required": true,
+    "idempotency": {"classification": "UNKNOWN", "key": null},
+    "resume_policy": "HUMAN_RECONCILIATION_REQUIRED", "last_verified_checkpoint": null,
+    "outstanding_operations": []
+  }]
+}

@@ -1,0 +1,19 @@
+{
+  "status": "PROPOSED",
+  "version": "0.1",
+  "architecture_ref": "architecture/decisions/ADR-0001-single-logical-ceo.md",
+  "confirmed_constraint": "G-001",
+  "runtime_enabled": false,
+  "default": "deny",
+  "registered_nodes": [],
+  "node_types": ["LOCAL", "CLOUD", "REMOTE_SERVER", "EDGE_DEVICE", "DEDICATED_COMPUTE_NODE"],
+  "prospective_permissions": {
+    "LOCAL": ["Execute explicitly assigned work", "Use scoped local tools and inputs", "Stage checkpoints and submit reports"],
+    "CLOUD": ["Execute explicitly assigned work", "Use scoped cloud tools and inputs", "Stage checkpoints and submit reports"]
+  },
+  "requirements": ["Explicit node registration and workload authorization", "Per-runtime credential profile", "Capability and privacy verification", "Task lease and current fences", "Revocation and resource limits"],
+  "direct_authoritative_writes": false,
+  "governance_approval": false,
+  "personal_credential_access": false,
+  "note": "Node hosting or capability claims grant no organizational authority. Future node types require explicit reviewed permission profiles."
+}

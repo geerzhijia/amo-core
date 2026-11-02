@@ -79,6 +79,12 @@ class ContinuityTests(FoundationFixture):
         self.put("decisions/records/DEC-9999.json", {"synthetic": True})
         commit()
         validate_history(self.root, base)
+        adr = self.root / "architecture/decisions/ADR-0001-single-logical-ceo.md"
+        accepted = adr.read_text(encoding="utf-8")
+        adr.write_text(accepted + "\nUnrecorded reinterpretation.\n", encoding="utf-8", newline="\n")
+        with self.assertRaisesRegex(ValueError, "Historical rewrite forbidden"):
+            validate_history(self.root, base)
+        adr.write_text(accepted, encoding="utf-8", newline="\n")
         with (self.root / "constitution/constitution_v0.1.md").open("a", encoding="utf-8", newline="\n") as file:
             file.write("\nRewritten draft.\n")
         commit()
