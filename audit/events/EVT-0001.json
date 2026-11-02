@@ -1,0 +1,11 @@
+{
+  "id": "EVT-0001",
+  "recorded_at": "2026-11-02T03:31:28.495Z",
+  "event_type": "foundation_initialized",
+  "actor": "foundation-initializer",
+  "details": "Recorded founder instructions and G-001. Generated a proposed constitution, policies, schemas, and continuity procedures. No runtime, human enrollment, policy activation, or constitution approval was performed. Timestamp is the supplied founding request timestamp, not an attested execution time.",
+  "authorization_basis": "Founder request recorded in DEC-0001; architectural recommendations remain proposed in DEC-0002.",
+  "references": ["decisions/records/DEC-0001.json", "decisions/records/DEC-0002.json", "governance/founder_brief.md"],
+  "previous_event": null,
+  "previous_sha256": null
+}

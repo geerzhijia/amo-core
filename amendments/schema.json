@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AMO immutable amendment lifecycle snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["amendment_id", "record_number", "recorded_at", "status", "previous_record", "change_type", "original_principle", "proposed_principle", "proposed_by", "reason", "evidence", "expected_impact", "document_sha256", "human_review", "effective_at", "revisits"],
+  "properties": {
+    "amendment_id": {"type": "string", "pattern": "^AM-[0-9]{4,}$"},
+    "record_number": {"type": "integer", "minimum": 1},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["proposed", "in_review", "approved", "rejected", "activated"]},
+    "previous_record": {"type": ["string", "null"], "pattern": "^amendments/records/AM-[0-9]{4,}-R[0-9]{3,}\\.json$"},
+    "change_type": {"enum": ["addition", "revision", "retirement"]},
+    "original_principle": {"type": ["object", "null"]},
+    "proposed_principle": {"type": "object"},
+    "proposed_by": {
+      "type": "object", "additionalProperties": false, "required": ["id", "actor_type"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "actor_type": {"enum": ["human", "ai", "authorized_other"]}}
+    },
+    "reason": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "expected_impact": {"type": "string", "minLength": 1},
+    "document_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "human_review": {"type": ["string", "null"], "pattern": "^governance/approvals/APR-[0-9]{4,}\\.json$"},
+    "effective_at": {"type": ["string", "null"], "format": "date-time"},
+    "revisits": {"type": ["string", "null"], "pattern": "^amendments/records/AM-[0-9]{4,}-R[0-9]{3,}\\.json$"}
+  },
+  "allOf": [
+    {"if": {"properties": {"change_type": {"const": "addition"}}}, "then": {"properties": {"original_principle": {"type": "null"}}}, "else": {"properties": {"original_principle": {"type": "object"}}}},
+    {"if": {"properties": {"status": {"enum": ["approved", "rejected", "activated"]}}}, "then": {"properties": {"human_review": {"type": "string"}}}, "else": {"properties": {"human_review": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"const": "activated"}}}, "then": {"properties": {"effective_at": {"type": "string"}}}, "else": {"properties": {"effective_at": {"type": "null"}}}}
+  ]
+}

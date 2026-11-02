@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AMO significant decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "date", "record_type", "owner", "statement", "context", "evidence", "alternatives", "risks", "assumptions", "expected_outcome", "authorization", "actual_outcome", "lessons_learned", "supersedes"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^DEC-[0-9]{4,}$"},
+    "date": {"type": "string", "format": "date"},
+    "record_type": {"enum": ["human_instruction", "ai_recommendation", "human_approved", "authorized_actor_decision", "outcome_update"]},
+    "owner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "actor_type"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "actor_type": {"enum": ["human", "ai", "authorized_other"]}}
+    },
+    "statement": {"type": "string", "minLength": 1},
+    "context": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "alternatives": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "risks": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "assumptions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "expected_outcome": {"type": "string", "minLength": 1},
+    "authorization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "basis", "approval_ref"],
+      "properties": {
+        "status": {"enum": ["confirmed_instruction", "proposed", "approved", "authorized", "recorded"]},
+        "basis": {"type": "string", "minLength": 1},
+        "approval_ref": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
+    "actual_outcome": {"type": ["string", "null"], "minLength": 1},
+    "lessons_learned": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "supersedes": {"type": ["string", "null"], "pattern": "^decisions/records/DEC-[0-9]{4,}\\.json$"}
+  },
+  "allOf": [
+    {"if": {"properties": {"record_type": {"const": "ai_recommendation"}}}, "then": {"properties": {"owner": {"properties": {"actor_type": {"const": "ai"}}}, "authorization": {"properties": {"status": {"const": "proposed"}, "approval_ref": {"type": "null"}}}}}},
+    {"if": {"properties": {"record_type": {"const": "human_instruction"}}}, "then": {"properties": {"owner": {"properties": {"actor_type": {"const": "human"}}}, "authorization": {"properties": {"status": {"const": "confirmed_instruction"}, "approval_ref": {"type": "null"}}}}}},
+    {"if": {"properties": {"record_type": {"const": "human_approved"}}}, "then": {"properties": {"authorization": {"properties": {"status": {"const": "approved"}, "approval_ref": {"type": "string", "minLength": 1}}}}}},
+    {"if": {"properties": {"record_type": {"const": "authorized_actor_decision"}}}, "then": {"properties": {"authorization": {"properties": {"status": {"const": "authorized"}, "approval_ref": {"type": "string", "minLength": 1}}}}}},
+    {"if": {"properties": {"record_type": {"const": "outcome_update"}}}, "then": {"properties": {"supersedes": {"type": "string"}, "actual_outcome": {"type": "string", "minLength": 1}, "authorization": {"properties": {"status": {"const": "recorded"}, "approval_ref": {"type": "null"}}}}}}
+  ]
+}

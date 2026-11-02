@@ -1,0 +1,21 @@
+{
+  "organization": "amo",
+  "as_of": "2026-11-01",
+  "stage": "foundation_initialization",
+  "status": "PROPOSED navigation summary; not an authority grant",
+  "constitution": {"path": "constitution/constitution_v0.1.md", "status": "PROPOSED"},
+  "active_principles": ["G-001@1.0.0"],
+  "known_projects": [],
+  "known_tasks": [],
+  "budgets": [],
+  "pending_amendments": [],
+  "runtime_enabled": false,
+  "unresolved": [
+    "UNDECIDED: ultimate organizational mission and additional values",
+    "UNDECIDED: legal structure, revenue model, compensation, external operating scope",
+    "UNDECIDED: authenticated human approvers and approved governance policy baseline",
+    "UNDECIDED: license and approved conflict-priority ranking",
+    "PROPOSED: constitution v0.1 and architecture DEC-0002 awaiting founder review",
+    "DEFERRED: deployed access controls, signed approvals, backup custodian and restore test"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "DEC-0002",
+  "date": "2026-11-01",
+  "record_type": "ai_recommendation",
+  "owner": {"id": "foundation-initializer", "actor_type": "ai"},
+  "statement": "Propose Markdown identity and historical documents, JSON records and schemas, JSON-subset YAML policies, append-only snapshots, and development-only Python validation.",
+  "context": "A small repository foundation must reconstruct institutional state without a runtime, provider SDK, or database. The founder allowed architectural choices if documented; this recommendation does not approve its draft policies.",
+  "evidence": ["governance/founder_brief.md", "governance/INTEGRITY.md", "migrations/README.md"],
+  "alternatives": ["Provider-native memory: loses model independence.", "Database and agent runtime now: premature deployment and dependencies.", "Free-form documents only: portable but weaker machine validation.", "Separate empty directories for future operations and evaluation suites: omitted until real content exists."],
+  "risks": ["Structural checks cannot authenticate humans or enforce hosted access controls.", "JSON syntax in .yaml files is less idiomatic but valid YAML 1.2.", "Snapshot records repeat fields to keep each state portable.", "Schema and validator updates must be human-reviewed alongside policy changes."],
+  "assumptions": ["Python is only a development tool and never organizational identity infrastructure.", "Future migrations can reimplement validation using the published schemas and lifecycle rules."],
+  "expected_outcome": "A compact, auditable, provider-neutral foundation ready for founder review.",
+  "authorization": {"status": "proposed", "basis": "Initializer recommendation awaiting founder review; no governance activation.", "approval_ref": null},
+  "actual_outcome": null,
+  "lessons_learned": [],
+  "supersedes": null
+}

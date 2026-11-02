@@ -1,0 +1,17 @@
+{
+  "status": "PROPOSED",
+  "version": "0.1",
+  "runtime_enabled": false,
+  "default": "deny",
+  "ai_ceo": {
+    "current_permissions": [],
+    "prospective_read": ["Identity", "Constitution", "Principles", "Governance", "Decisions", "Knowledge", "Audit"],
+    "prospective_propose": ["Decision recommendations", "Amendments", "Project plans", "Subagent mandates"],
+    "never_unilateral": ["Approve principle changes", "Rewrite history", "Grant itself permissions", "Enroll approvers", "Change access controls"]
+  },
+  "subagents": {"status": "DEFERRED", "current_permissions": []},
+  "external_transactions": false,
+  "financial_integrations": false,
+  "secrets_in_repository": false,
+  "note": "Descriptive proposed policy, not an operating-system or GitHub permission enforcement mechanism."
+}

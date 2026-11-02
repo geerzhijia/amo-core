@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AMO declared human review evidence (not cryptographically verified)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "reviewer", "authority_ref", "target", "target_sha256", "decision", "reviewed_at", "evidence", "reason"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^APR-[0-9]{4,}$"},
+    "reviewer": {
+      "type": "object", "additionalProperties": false, "required": ["id", "actor_type"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "actor_type": {"const": "human"}}
+    },
+    "authority_ref": {"type": "string", "minLength": 1},
+    "target": {"type": "string", "minLength": 1},
+    "target_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "decision": {"enum": ["approve", "reject"]},
+    "reviewed_at": {"type": "string", "format": "date-time"},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "reason": {"type": ["string", "null"], "minLength": 1}
+  }
+}

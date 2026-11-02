@@ -1,0 +1,21 @@
+{
+  "id": "DEC-0001",
+  "date": "2026-11-01",
+  "record_type": "human_instruction",
+  "owner": {"id": "founder-initialization-request", "actor_type": "human"},
+  "statement": "Initialize AMO as a model-independent organization with repository-based continuity and confirmed G-001 human amendment approval.",
+  "context": "The human founder supplied the foundation specification. This records the instruction, not approval of generated drafts or enrollment of an approver.",
+  "evidence": ["governance/founder_brief.md"],
+  "alternatives": ["Vendor memory as authority: explicitly excluded by the founder.", "Autonomous runtime now: explicitly excluded by the founder."],
+  "risks": ["The source summary is not a cryptographically authenticated transcript.", "Git history can be rewritten by privileged administrators."],
+  "assumptions": ["No ultimate mission or legal/business model was supplied."],
+  "expected_outcome": "A portable, auditable foundation with G-001 recorded and a clearly draft constitution.",
+  "authorization": {
+    "status": "confirmed_instruction",
+    "basis": "Explicit human founding request; scoped summary retained in governance/founder_brief.md. No reusable approval mandate is inferred.",
+    "approval_ref": null
+  },
+  "actual_outcome": null,
+  "lessons_learned": [],
+  "supersedes": null
+}

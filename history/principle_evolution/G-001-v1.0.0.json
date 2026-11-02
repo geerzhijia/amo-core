@@ -1,0 +1,14 @@
+{
+  "id": "G-001",
+  "title": "Human approval required for principle amendments",
+  "description": "The CEO may propose principle changes; only explicitly authorized humans may approve them, followed by recording and activation.",
+  "rationale": "Separate recommendation from amendment authority and preserve accountable organizational continuity.",
+  "scope": "All principles, including changes to amendment authority itself.",
+  "priority": "UNDECIDED",
+  "status": "active",
+  "created": "2026-11-01",
+  "version": "1.0.0",
+  "source": "decisions/records/DEC-0001.json",
+  "related_principles": [],
+  "document": "history/principle_evolution/G-001-v1.0.0.md"
+}

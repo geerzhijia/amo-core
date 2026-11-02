@@ -1,0 +1,14 @@
+{
+  "status": "PROPOSED",
+  "version": "0.1",
+  "confirmed_constraint": "G-001",
+  "lifecycle": ["proposed", "in_review", "approved_or_rejected", "recorded", "activated_if_approved"],
+  "required_approver_type": "human",
+  "scope": ["principle_addition", "principle_revision", "principle_retirement", "governance_authority_change", "constitution_adoption"],
+  "approval_binding": ["Exact proposal content digest", "Human identity", "Current authorization basis", "Explicit approve or reject", "Time", "Review evidence"],
+  "no_implied_approval": ["Silence", "Commit authorship", "Repository ownership", "CI success", "AI recommendation", "Public publication"],
+  "activation": "Separate recorded event after approval; effective document must match the reviewed proposal. No backdating.",
+  "rejections": "Retain with reason when supplied; revisit through a new linked proposal with new evidence.",
+  "policy_activation": "DEFERRED pending explicit founder approval and human enrollment.",
+  "signature_verification": "DEFERRED; structural validation does not authenticate a human."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "PROPOSED",
+  "version": "0.1",
+  "confirmed_constraint": "G-001",
+  "authorized_humans": [],
+  "human_enrollment": "UNDECIDED: verify account identity and mandate out of band; record enrollment and audit before accepting approvals.",
+  "roles": {
+    "founder": {
+      "identity": "UNDECIDED",
+      "authority": ["Specify mission", "Review constitution and policy", "Approve or reject principle amendments under G-001"]
+    },
+    "ai_ceo": {
+      "runtime_enabled": false,
+      "prospective": ["Analyze", "Recommend", "Propose amendments", "Plan delegation within approved mandates"],
+      "prohibited": ["Approve own amendments", "Activate unapproved changes", "Rewrite authoritative history", "Infer authority from repository write access"]
+    },
+    "subagents": {
+      "status": "DEFERRED",
+      "authority": []
+    }
+  },
+  "other_actors": "No operational mandate granted. Future mandates require explicit human-reviewed records."
+}
